@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+<div class="card">
+    <div class="search">
+        <input type="text" placeholder="enter city name" spellcheck="false">
+        <button><img src="images/search.png" alt=""></button>
+    </div>
+
+    <div class="error">
+        <p>invalid city name</p>
+    </div>
+
+    <div class="weather">
+        <img src="images/rain.png" alt="">
+        <h1 class="temp">22°C</h1>
+        <h2 class="city">New York</h2>
+
+        <div class="details">
+
+            <div class="col">
+                <img src="images/humidity.png" alt="">
+                <div>
+                    <p class="humidity">50%</p>
+                    <p>Humidity</p>
+                </div>
+            </div>
+
+            <div class="col">
+                <img src="images/wind.png" alt="">
+                <div>
+                    <p class="wind">15 km/hr</p>
+                    <p>Wind Speed</p>
+                </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+APIKey = "8c41c4fabf23f2adfecc48cc97dfea05";
+let apiUrl =  "https://api.openweathermap.org/data/2.5/weather?";
+city="Hyderabad";
+
+searchText = document.querySelector(".search input");
+searchBtn = document.querySelector(".search button");
+windIcon = document.querySelector('.weather img');
+console.log(searchText.value)
+
+async function checkWeather(city){
+
+    
+    const response = await fetch(apiUrl+ `q=${city}` + `&appid=${APIKey}` + "&units=metric");
+    var data = await response.json();
+
+   if (response.status == '404' || response.status == '400'){
+        document.querySelector('.error').style.visibility = 'visible';
+   } else {
+        document.querySelector('.error').style.visibility = 'hidden';
+        document.querySelector(".city").innerHTML = data.name;
+        document.querySelector(".temp").innerHTML = data.main.temp + '°C';
+        document.querySelector(".humidity").innerHTML = data.main.humidity;
+        document.querySelector(".wind").innerHTML = data.wind.speed + "km/hr";
+
+        imageType = data.weather[0].main.toLowerCase();
+        windIcon.src = `images/${imageType}.png`;
+   }
+    console.log(data);
+
+
+
+
+}
+
+searchBtn.addEventListener("click", ()=>{
+    checkWeather(searchText.value)
+})
+
+checkWeather('hyderabad');
+</script>
+    
+</body> 
+</html>
